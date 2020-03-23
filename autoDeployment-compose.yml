@@ -20,33 +20,37 @@ services:
       JAVA_OPTS: "-Dorg.apache.commons.jelly.tags.fmt.timeZone=Asia/Shanghai"
     ports:  
       - "80:8080"
-
+      
   sonarqube:
-    container_name: dev_sonarqube
-    image: sonarqube
+    image: sonarqube:7.9.1-community
+    container_name: dev-sonarqube
     ports:
-     - "8080:9000"
-    links:
-     - db
+      - "8080:9000"
+      - "9092:9092"
+    networks:
+      - sonarnet
     environment:
-      SONARQUBE_JDBC_USERNAME: ${SONARQUBE_JDBC_USERNAME}
-      SONARQUBE_JDBC_PASSWORD: ${SONARQUBE_JDBC_PASSWORD} 
-      SONARQUBE_JDBC_URL: ${SONARQUBE_JDBC_URL}
-    restart: always
-    volumes:  
-     - ./sonarqube/conf:/opt/sonarqube/conf
-     - ./sonarqube/data:/opt/sonarqube/data
-     - ./sonarqube/extensions:/opt/sonarqube/extensions
-     - ./sonarqube/bundled-plugins:/opt/sonarqube/lib/bundled-plugins
-
-
+      - SONARQUBE_HOME=/opt/sonarqube
+      - SONARQUBE_JDBC_USERNAME=sonar
+      - SONARQUBE_JDBC_PASSWORD=sonar
+      - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonar
+    volumes:
+      - /app/sonarqube/conf:/opt/sonarqube/conf
+      - /app/sonarqube/data:/opt/sonarqube/data
+      - /app/sonarqube/logs:/opt/sonarqube/logs
+      - /app/sonarqube/extensions:/opt/sonarqube/extensions
+ 
   db:
     image: postgres
-    container_name: dev_postgres
-    volumes:
-       - /var/lib/postgresql
-    command: /bin/true
     container_name: postgres
+    networks:
+      - sonarnet
     environment:
-     - POSTGRES_USER=${SONARQUBE_JDBC_USERNAME}
-     - POSTGRES_PASSWORD=${SONARQUBE_JDBC_PASSWORD} 
+      - POSTGRES_USER=sonar
+      - POSTGRES_PASSWORD=sonar
+    volumes:
+      - /app/sonarqube/postgres:/var/lib/postgresql/data
+ 
+networks:
+  sonarnet:
+    driver: bridge
