@@ -36,10 +36,10 @@ services:
       - SONARQUBE_JDBC_PASSWORD=sonar
       - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonar
     volumes:
-      - /app/sonarqube/conf:./sonarqube/conf
-      - /app/sonarqube/data:./sonarqube/data
-      - /app/sonarqube/logs:./sonarqube/logs
-      - /app/sonarqube/extensions:./sonarqube/extensions
+      - /app/sonarqube/conf:/home/deploy/docker-jenkins-sonarqube-1/sonarqube/conf
+      - /app/sonarqube/data:/home/deploy/docker-jenkins-sonarqube-1/sonarqube/data
+      - /app/sonarqube/logs:/home/deploy/docker-jenkins-sonarqube-1/sonarqube/logs
+      - /app/sonarqube/extensions:/home/deploy/docker-jenkins-sonarqube-1/sonarqube/extensions
  
   db:
     image: postgres
