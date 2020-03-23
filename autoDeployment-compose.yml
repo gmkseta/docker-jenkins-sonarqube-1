@@ -20,35 +20,46 @@ services:
       JAVA_OPTS: "-Dorg.apache.commons.jelly.tags.fmt.timeZone=Asia/Shanghai"
     ports:  
       - "80:8080"
-  mysql:  
-    container_name: dev-mysql
-    image: mysql:latest
-    restart: always
-    volumes:  
-      - ./db/mysql/data:/var/lib/mysql 
-      - ./db/mysql/conf.d:/etc/mysql/conf.d    
-      - ./db/mysql/init_db/:/docker-entrypoint-initdb.d      
-    restart: always
+
+  sonarqube:
+    container_name: dev_sonarqube
+    image: sonarqube
+    ports:
+     - "8080:9000"
+    links:
+     - db
     environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
-      TZ: ${GLOBAL_TIME_ZONE}
-    ports:  
-      - "${MYSQL_PORT}:3306"
-  sonarqube:  
-    container_name: dev-sonarqube
+      SONARQUBE_JDBC_URL: jdbc:postgresql://db:5432/sonar
+      SONARQUBE_JDBC_USERNAME: ${SONARQUBE_JDBC_USERNAME}
+      SONARQUBE_JDBC_PASSWORD: ${SONARQUBE_JDBC_PASSWORD} 
+#      SONARQUBE_JDBC_URL: ${SONARQUBE_JDBC_URL}
+    volumes_from:
+     - plugins
+
+  db:
+    container_name: postgres
+    image: postgres
+    volumes_from:
+      - datadb
+    environment:
+     - POSTGRES_USER=${SONARQUBE_JDBC_USERNAME}
+     - POSTGRES_PASSWORD=${SONARQUBE_JDBC_PASSWORD} 
+
+  datadb:
+    image: postgres
+    container_name: plugins_postgres
+    volumes:
+      - /var/lib/postgresql
+    command: /bin/true
+
+  plugins:
+    container_name: plugins_sonarqube
     image: sonarqube
     restart: always
     volumes:  
-      - ./sonarqube/conf:/opt/sonarqube/conf
-      - ./sonarqube/data:/opt/sonarqube/data
-      - ./sonarqube/extensions:/opt/sonarqube/extensions
-      - ./sonarqube/bundled-plugins:/opt/sonarqube/lib/bundled-plugins
-    environment:
-      SONARQUBE_JDBC_USERNAME: ${SONARQUBE_JDBC_USERNAME}
-      SONARQUBE_JDBC_PASSWORD: ${SONARQUBE_JDBC_PASSWORD} 
-      SONARQUBE_JDBC_URL: ${SONARQUBE_JDBC_URL}
-    ports:  
-      - "8080:9000"
+     - ./sonarqube/conf:/opt/sonarqube/conf
+     - ./sonarqube/data:/opt/sonarqube/data
+     - ./sonarqube/extensions:/opt/sonarqube/extensions
+     - ./sonarqube/bundled-plugins:/opt/sonarqube/lib/bundled-plugins
 
-      
+    command: /bin/true
