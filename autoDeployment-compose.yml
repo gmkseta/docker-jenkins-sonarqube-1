@@ -19,7 +19,7 @@ services:
       TZ: ${GLOBAL_TIME_ZONE}
       JAVA_OPTS: "-Dorg.apache.commons.jelly.tags.fmt.timeZone=Asia/Shanghai"
     ports:  
-      - "8080:8080"
+      - "80:8080"
   mysql:  
     container_name: dev-mysql
     image: repo.1000m.xin/public/mysql:5.6
@@ -49,6 +49,6 @@ services:
       SONARQUBE_JDBC_PASSWORD: ${SONARQUBE_JDBC_PASSWORD} 
       SONARQUBE_JDBC_URL: ${SONARQUBE_JDBC_URL}
     ports:  
-      - "9000:9000"
+      - "8080:9000"
 
       
