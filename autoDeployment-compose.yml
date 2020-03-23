@@ -29,8 +29,8 @@ services:
       - "9092:9092"
     networks:
       - sonarnet
-    environment:
     restart: always
+    environment:
       - SONARQUBE_HOME=/opt/sonarqube
       - SONARQUBE_JDBC_USERNAME=sonar
       - SONARQUBE_JDBC_PASSWORD=sonar
