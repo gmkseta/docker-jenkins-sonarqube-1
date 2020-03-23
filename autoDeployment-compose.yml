@@ -29,13 +29,17 @@ services:
     links:
      - db
     environment:
-      SONARQUBE_JDBC_URL: jdbc:postgresql://db:5432/sonar
       SONARQUBE_JDBC_USERNAME: ${SONARQUBE_JDBC_USERNAME}
       SONARQUBE_JDBC_PASSWORD: ${SONARQUBE_JDBC_PASSWORD} 
-#      SONARQUBE_JDBC_URL: ${SONARQUBE_JDBC_URL}
-    volumes_from:
-     - plugins
+      SONARQUBE_JDBC_URL: ${SONARQUBE_JDBC_URL}
+    restart: always
+    volumes:  
+     - ./sonarqube/conf:/opt/sonarqube/conf
+     - ./sonarqube/data:/opt/sonarqube/data
+     - ./sonarqube/extensions:/opt/sonarqube/extensions
+     - ./sonarqube/bundled-plugins:/opt/sonarqube/lib/bundled-plugins
 
+    
   db:
     container_name: postgres
     image: postgres
@@ -44,22 +48,5 @@ services:
     environment:
      - POSTGRES_USER=${SONARQUBE_JDBC_USERNAME}
      - POSTGRES_PASSWORD=${SONARQUBE_JDBC_PASSWORD} 
-
-  datadb:
-    image: postgres
-    container_name: plugins_postgres
     volumes:
       - /var/lib/postgresql
-    command: /bin/true
-
-  plugins:
-    container_name: plugins_sonarqube
-    image: sonarqube
-    restart: always
-    volumes:  
-     - ./sonarqube/conf:/opt/sonarqube/conf
-     - ./sonarqube/data:/opt/sonarqube/data
-     - ./sonarqube/extensions:/opt/sonarqube/extensions
-     - ./sonarqube/bundled-plugins:/opt/sonarqube/lib/bundled-plugins
-
-    command: /bin/true
