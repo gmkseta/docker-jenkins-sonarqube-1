@@ -40,7 +40,7 @@ services:
      - ./sonarqube/bundled-plugins:/opt/sonarqube/lib/bundled-plugins
 
 
-  postgresql:
+  db:
     image: postgres
     container_name: dev_postgres
     volumes:
