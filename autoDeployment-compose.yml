@@ -30,6 +30,7 @@ services:
     networks:
       - sonarnet
     environment:
+    restart: always
       - SONARQUBE_HOME=/opt/sonarqube
       - SONARQUBE_JDBC_USERNAME=sonar
       - SONARQUBE_JDBC_PASSWORD=sonar
@@ -43,6 +44,7 @@ services:
   db:
     image: postgres
     container_name: postgres
+    restart: always
     networks:
       - sonarnet
     environment:
