@@ -46,7 +46,7 @@ services:
     volumes:
        - /var/lib/postgresql
     command: /bin/true
-     container_name: postgres
+    container_name: postgres
     environment:
      - POSTGRES_USER=${SONARQUBE_JDBC_USERNAME}
      - POSTGRES_PASSWORD=${SONARQUBE_JDBC_PASSWORD} 
