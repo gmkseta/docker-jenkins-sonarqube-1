@@ -2,7 +2,7 @@ version: "3"
 services: 
   jenkins:  
     container_name: dev-jenkins
-    image: repo.1000m.xin/public/jenkins:latest
+    image: jenkins/jenkins:lts 
     restart: always
     privileged: true
     volumes:  
