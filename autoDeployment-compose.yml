@@ -39,14 +39,14 @@ services:
      - ./sonarqube/extensions:/opt/sonarqube/extensions
      - ./sonarqube/bundled-plugins:/opt/sonarqube/lib/bundled-plugins
 
-    
-  db:
-    container_name: postgres
+
+  postgresql:
     image: postgres
-    volumes_from:
-      - datadb
+    container_name: dev_postgres
+    volumes:
+       - /var/lib/postgresql
+    command: /bin/true
+     container_name: postgres
     environment:
      - POSTGRES_USER=${SONARQUBE_JDBC_USERNAME}
      - POSTGRES_PASSWORD=${SONARQUBE_JDBC_PASSWORD} 
-    volumes:
-      - /var/lib/postgresql
