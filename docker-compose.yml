@@ -17,14 +17,15 @@ services:
     environment:
       TZ: ${GLOBAL_TIME_ZONE}
       JAVA_OPTS: "-Dorg.apache.commons.jelly.tags.fmt.timeZone=Asia/Seoul"
-    ports:  
-      - "80:8080"
+      JENKINS_OPTS: "--prefix=/jenkins"
+    expose:  
+      - "8080"
       
   sonarqube:
     container_name: sonarqube
     image: sonarqube
     ports:
-      - "8080:9000"
+      - "9000:9000"
     links:
       - db
     environment:
