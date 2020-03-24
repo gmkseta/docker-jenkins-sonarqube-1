@@ -16,10 +16,21 @@ services:
       -  ~/.ssh:/root/.ssh
     environment:
       TZ: ${GLOBAL_TIME_ZONE}
-      JAVA_OPTS: "-Dorg.apache.commons.jelly.tags.fmt.timeZone=Asia/Shanghai"
+      JAVA_OPTS: "-Dorg.apache.commons.jelly.tags.fmt.timeZone=Asia/Seoul"
     ports:  
       - "80:8080"
       
+  db:
+    image: postgres
+    container_name: postgres
+    networks:
+      - sonarnet
+    environment:
+      - POSTGRES_USER=${SONARQUBE_JDBC_USERNAME}
+      - POSTGRES_PASSWORD=${SONARQUBE_JDBC_PASSWORD}
+    volumes:
+      - /app/sonarqube/postgres:/home/deploy/docker-jenkins-sonarqube-1/db/postgres/data
+     
   sonarqube:
     image: sonarqube:7.9.1-community
     container_name: dev-sonarqube
@@ -39,17 +50,7 @@ services:
       - /app/sonarqube/logs:/home/deploy/docker-jenkins-sonarqube-1/sonarqube/logs
       - /app/sonarqube/extensions:/home/deploy/docker-jenkins-sonarqube-1/sonarqube/extensions
  
-  db:
-    image: postgres
-    container_name: postgres
-    networks:
-      - sonarnet
-    environment:
-      - POSTGRES_USER=${SONARQUBE_JDBC_USERNAME}
-      - POSTGRES_PASSWORD=${SONARQUBE_JDBC_PASSWORD}
-    volumes:
-      - /app/sonarqube/postgres:/var/lib/postgresql/data
- 
+  
 networks:
   sonarnet:
     driver: bridge
