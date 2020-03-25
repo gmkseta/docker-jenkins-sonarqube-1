@@ -30,7 +30,6 @@ services:
     volumes:
       - /opt/sonarqube/extensions
       - /opt/sonarqube/lib/bundled-plugins
-    command: /bin/true
   
     
     
